@@ -1,4 +1,5 @@
 from django.shortcuts import render
+from django.http import Http404
 
 posts = [
     {
@@ -44,20 +45,23 @@ posts = [
 ]
 
 
-# Create your views here.
 def index(request):
+    """View-функция для просмотра списка постов"""
     template = 'blog/index.html'
-    context = {'posts_list': posts}
+    context = {'posts_list': reversed(posts)}
     return render(request, template, context)
 
 
 def post_detail(request, id):
-    template = 'blog/detail.html'
-    context = {'post': posts[id]}
-    return render(request, template, context)
+    """View-функция для просмотра поста подробнее"""
+    if id not in posts[id]:
+        raise Http404
+    else:
+        context = {'post': posts[id]}
+        return render(request, 'blog/detail.html', context)
 
 
 def category_posts(request, category_slug):
-    template = 'blog/category.html'
+    """View-функция для поиска всех постов конкретной категории"""
     context = {'category_slug': category_slug}
-    return render(request, template, context)
+    return render(request, 'blog/category.html', context)
