@@ -44,9 +44,7 @@ posts = [
     },
 ]
 
-post_dictionary = {}
-for post in posts:
-    post_dictionary[post['id']] = post['date']
+posts_by_id = {post['id']: post['date'] for post in posts}
 
 
 def index(request):
@@ -58,11 +56,10 @@ def index(request):
 
 def post_detail(request, post_id):
     """View-функция для просмотра поста подробнее"""
-    if post_id not in post_dictionary:
-        raise Http404
-    else:
-        context = {'post': posts[post_id]}
-        return render(request, 'blog/detail.html', context)
+    if post_id not in posts_by_id:
+        raise Http404(f"Post with id {post_id} not exist")
+    context = {'post': posts[list(posts_by_id.keys())[post_id]]}
+    return render(request, 'blog/detail.html', context)
 
 
 def category_posts(request, category_slug):
