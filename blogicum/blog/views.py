@@ -58,7 +58,7 @@ def post_detail(request, post_id):
     """View-функция для просмотра поста подробнее"""
     if post_id not in posts_by_id:
         raise Http404(f"Post with id {post_id} not exist")
-    context = {'post': posts[list(posts_by_id.keys())[post_id]]}
+    context = {'post': next(item for item in posts if item['id'] == post_id)}
     return render(request, 'blog/detail.html', context)
 
 
